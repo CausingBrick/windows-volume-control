@@ -10,6 +10,6 @@ fn main() {
         controller.GetAllProcessSessions();
         let test = controller.get_all_session_names();
         let master_session = controller.get_session_by_name("master".to_string());
-        println!("{:?}",master_session.unwrap().getVolume());
+        println!("{:?}", master_session.unwrap().getVolume());
     }
 }

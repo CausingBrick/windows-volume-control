@@ -1,4 +1,5 @@
 use session::{ApplicationSession, EndPointSession, Session};
+use std::process::exit;
 use windows::{
     core::Interface,
     Win32::{
@@ -8,13 +9,15 @@ use windows::{
             IMMDeviceEnumerator, ISimpleAudioVolume, MMDeviceEnumerator,
         },
         System::{
-            Com::{CoCreateInstance, CoInitializeEx, CLSCTX_INPROC_SERVER, COINIT_MULTITHREADED, CLSCTX_ALL, COINIT_APARTMENTTHREADED},
+            Com::{
+                CoCreateInstance, CoInitializeEx, CLSCTX_ALL, CLSCTX_INPROC_SERVER,
+                COINIT_APARTMENTTHREADED, COINIT_MULTITHREADED,
+            },
             ProcessStatus::K32GetProcessImageFileNameA,
             Threading::{OpenProcess, PROCESS_QUERY_INFORMATION, PROCESS_VM_READ},
         },
     },
 };
-use std::process::exit;
 
 mod session;
 
@@ -26,7 +29,7 @@ pub struct AudioController {
 
 pub enum CoinitMode {
     MultiTreaded,
-    ApartmentThreaded
+    ApartmentThreaded,
 }
 
 impl AudioController {
@@ -34,8 +37,8 @@ impl AudioController {
         let mut coinit: windows::Win32::System::Com::COINIT = COINIT_MULTITHREADED;
         if let Some(x) = coinit_mode {
             match x {
-                CoinitMode::ApartmentThreaded   => {coinit = COINIT_APARTMENTTHREADED},
-                CoinitMode::MultiTreaded        => {coinit = COINIT_MULTITHREADED}
+                CoinitMode::ApartmentThreaded => coinit = COINIT_APARTMENTTHREADED,
+                CoinitMode::MultiTreaded => coinit = COINIT_MULTITHREADED,
             }
         }
         CoInitializeEx(None, coinit).unwrap_or_else(|err| {

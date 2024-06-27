@@ -1,5 +1,5 @@
-use windows::Win32::Foundation::BOOL;
 use windows::core::GUID;
+use windows::Win32::Foundation::BOOL;
 use windows::Win32::Media::Audio::Endpoints::IAudioEndpointVolume;
 use windows::Win32::Media::Audio::ISimpleAudioVolume;
 
@@ -16,7 +16,7 @@ pub trait Session {
 pub struct EndPointSession {
     simple_audio_volume: IAudioEndpointVolume,
     name: String,
-    guid: GUID
+    guid: GUID,
 }
 impl EndPointSession {
     pub fn new(simple_audio_volume: IAudioEndpointVolume, name: String) -> Self {
@@ -28,7 +28,7 @@ impl EndPointSession {
         Self {
             simple_audio_volume: simple_audio_volume,
             name: name,
-            guid: guid
+            guid: guid,
         }
     }
 }
@@ -61,7 +61,7 @@ impl Session for EndPointSession {
             .SetMute(mute, &self.guid)
             .unwrap_or_else(|err| {
                 eprintln!("ERROR: Couldn't set mute: {err}");
-        });
+            });
     }
     unsafe fn getMute(&self) -> bool {
         self.simple_audio_volume
@@ -86,7 +86,7 @@ impl ApplicationSession {
             eprintln!("ERROR: Couldn't generate GUID {err}");
             exit(1);
         });
-        
+
         Self {
             simple_audio_volume: simple_audio_volume,
             name: name,
@@ -123,7 +123,7 @@ impl Session for ApplicationSession {
             .SetMute(mute, &self.guid)
             .unwrap_or_else(|err| {
                 eprintln!("ERROR: Couldn't set mute: {err}");
-        });
+            });
     }
     unsafe fn getMute(&self) -> bool {
         self.simple_audio_volume
